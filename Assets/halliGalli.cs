@@ -313,7 +313,6 @@ public class halliGalli : MonoBehaviour
 
     private IEnumerator FlipCardsBack()
     {
-        Debug.Log(cardStates.Join(", ")); //> TEMP
         var cardsToFlipAfter = new List<int>();
         for (int i = 0; i < 3; i++)
         {
@@ -345,7 +344,7 @@ public class halliGalli : MonoBehaviour
 
     // Twitch Plays
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = "!{0} ring [Rings the bell at any time} !{0} ring <#> [Rings the bell when the last digit of the timer is #] NOTE: The amount of time between cards flipping over is increased from 1 to 5 seconds.";
+    private readonly string TwitchHelpMessage = "!{0} ring [Rings the bell at any time] !{0} ring <#> [Rings the bell when the last digit of the timer is #] NOTE: The amount of time between cards flipping over is increased from 1 to 5 seconds.";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string input)
