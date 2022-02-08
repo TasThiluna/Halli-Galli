@@ -177,6 +177,7 @@ public class halliGalli : MonoBehaviour
             else
             {
                 Debug.LogFormat("[Halli Galli #{0}] That was not a valid digit. Strike!", moduleId);
+                module.HandleStrike();
                 Debug.LogFormat("[Halli Galli #{0}] Resetting...", moduleId);
                 stage = 0;
                 for (int i = 0; i < 3; i++)
