@@ -201,7 +201,7 @@ public class halliGalli : MonoBehaviour
             SetCardDisplay(ix);
             StartCoroutine(FlipCard(cardTransforms[ix], false));
             yield return new WaitUntil(() => cardStates[ix] == cardState.notMoving);
-            yield return new WaitForSeconds(TwitchPlaysActive ? 5f : 1f);
+            yield return new WaitForSeconds(TwitchPlaysActive ? 10f : 1f);
         }
     flipAnotherCard:
         var nextCard = rnd.Range(0, 3);
@@ -345,7 +345,7 @@ public class halliGalli : MonoBehaviour
 
     // Twitch Plays
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = "!{0} ring [Rings the bell at any time] !{0} ring <#> [Rings the bell when the last digit of the timer is #] NOTE: The amount of time between cards flipping over is increased from 1 to 5 seconds.";
+    private readonly string TwitchHelpMessage = "!{0} ring [Rings the bell at any time] !{0} ring <#> [Rings the bell when the last digit of the timer is #] NOTE: The amount of time between cards flipping over is increased from 1 to 10 seconds.";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string input)

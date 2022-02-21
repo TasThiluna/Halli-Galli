@@ -18,6 +18,6 @@ MonoBehaviour:
     idea and implementation by TasThing.\r\n\r\n[url=https://ktane.timwi.de/HTML/Halli
     Galli.html]Manual HTML[/url]\r\n[url=https://ktane.timwi.de/PDF/Halli Galli.pdf]Manual
     PDF[/url]"
-  version: 1.0.2
+  version: 1.0.3
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 6dd602ff5615d054f82c6da3f53b33eb, type: 3}
