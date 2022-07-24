@@ -201,7 +201,7 @@ public class halliGalli : MonoBehaviour
             SetCardDisplay(ix);
             StartCoroutine(FlipCard(cardTransforms[ix], false));
             yield return new WaitUntil(() => cardStates[ix] == cardState.notMoving);
-            yield return new WaitForSeconds(TwitchPlaysActive ? 10f : 1f);
+            yield return new WaitForSeconds(TwitchPlaysActive ? 15f : 1f);
         }
     flipAnotherCard:
         var nextCard = rnd.Range(0, 3);
