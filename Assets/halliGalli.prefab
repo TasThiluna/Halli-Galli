@@ -1573,7 +1573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ModuleType: halliGalli
   ModuleDisplayName: Halli Galli
-  RequiresTimerVisibility: 0
+  RequiresTimerVisibility: 1
 --- !u!114 &114355399256747534
 MonoBehaviour:
   m_ObjectHideFlags: 1
