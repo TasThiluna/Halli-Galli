@@ -25,14 +25,12 @@ public class halliGalli : MonoBehaviour
 
     private int[] displayedFruits = new[] { -1, -1, -1 };
     private int[] displayedCounts = new[] { -1, -1, -1 };
-    private int blankFruit;
     private bool bellGold;
     private int stage;
     private int solutionDigit;
 
     private static readonly string[] fruitNames = new[] { "strawberry", "melon", "lemon", "raspberry", "banana" };
     private static readonly string[] fruitNamesPlural = new[] { "strawberries", "melons", "lemons", "raspberries", "bananas" };
-    private static readonly string[] positionNames = new[] { "left", "middle", "right" };
     private static readonly int[] table = new[] { 0, 4, 2, 3, 1, 4, 2, 0, 1, 3, 3, 0, 1, 4, 2, 1, 3, 4, 2, 0, 2, 1, 3, 0, 4 };
     private enum cardState { notMoving, flippingUp, flippingDown };
     private cardState[] cardStates = new cardState[3];
@@ -57,32 +55,9 @@ public class halliGalli : MonoBehaviour
 
     private void Start()
     {
-        blankFruit = rnd.Range(0, 5);
-        var cardIx = bomb.GetSerialNumberNumbers().Last() % 3;
-        Debug.LogFormat("[Halli Galli #{0}] The last digit of the serial number is {1}, modulo 3 is {2}, so look at the {3} card. Blank cards represent {4}.", moduleId, bomb.GetSerialNumberNumbers().Last(), cardIx, positionNames[cardIx], fruitNamesPlural[blankFruit]);
-        Texture relevantBackTexture;
-        switch (blankFruit)
-        {
-            case 0:
-                relevantBackTexture = cardBackTextures.Where(tex => tex.name.StartsWith("pink ")).PickRandom();
-                break;
-            case 1:
-                relevantBackTexture = cardBackTextures.Where(tex => tex.name.EndsWith(" stars") && !tex.name.StartsWith("pink ") && !tex.name.StartsWith("black ")).PickRandom();
-                break;
-            case 2:
-                relevantBackTexture = cardBackTextures.Where(tex => tex.name.StartsWith("black ")).PickRandom();
-                break;
-            case 3:
-                relevantBackTexture = cardBackTextures.Where(tex => tex.name.EndsWith(" diamonds") && !tex.name.StartsWith("pink ") && !tex.name.StartsWith("black ")).PickRandom();
-                break;
-            case 4:
-                relevantBackTexture = cardBackTextures.Where(tex => tex.name.EndsWith(" stripes") && !tex.name.StartsWith("pink ") && !tex.name.StartsWith("black ")).PickRandom();
-                break;
-            default:
-                throw new Exception("blankFruit has an invalid value (expected 0-4).");
-        }
-        for (int i = 0; i < 3; i++)
-            cardBacks[i].material.mainTexture = i == cardIx ? relevantBackTexture : cardBackTextures.PickRandom();
+        var usedBackTexture = cardBackTextures.PickRandom();
+         foreach (Renderer cardBack in cardBacks)
+            cardBack.material.mainTexture = usedBackTexture;
         bellGold = rnd.Range(0, 2) == 0;
         if (bellGold)
             foreach (Renderer component in bellComponents)
@@ -135,10 +110,10 @@ public class halliGalli : MonoBehaviour
                 StartCoroutine(FlipCardsBack());
                 var row = 0;
                 var column = 0;
-                if (usedFruits.Count(x => x == fruitWithFive) == 2)
+                if (usedFruits.Count(x => x == fruitWithFive) == 2 && !usedFruits.Contains(-2)) // CHANGE MANUAL TO ACCOMODATE: 2 same + blank = use that fruit
                 {
                     row = usedFruits.First(x => x != fruitWithFive);
-                    Debug.LogFormat("[Halli Galli #{0}] 2 cards contributed to the total of 5, so use the other displayed fruit as the row. This was a {1}.", moduleId, fruitNames[row]);
+                    Debug.LogFormat("[Halli Galli #{0}] 2 cards contributed to the total of 5, and there's another fruit displayed, so use that as the row. This was a {1}.", moduleId, fruitNames[row]);
                 }
                 else
                 {
@@ -197,7 +172,7 @@ public class halliGalli : MonoBehaviour
             displayedFruits[ix] = rnd.Range(0, 5);
             displayedCounts[ix] = rnd.Range(0, 6);
             if (displayedCounts[ix] == 0)
-                displayedFruits[ix] = blankFruit;
+                displayedFruits[ix] = -2;
             SetCardDisplay(ix);
             StartCoroutine(FlipCard(cardTransforms[ix], false));
             yield return new WaitUntil(() => cardStates[ix] == cardState.notMoving);
@@ -215,7 +190,7 @@ public class halliGalli : MonoBehaviour
         displayedFruits[nextCard] = rnd.Range(0, 5);
         displayedCounts[nextCard] = rnd.Range(0, 6);
         if (displayedCounts[nextCard] == 0)
-            displayedFruits[nextCard] = blankFruit;
+            displayedFruits[nextCard] = -2;
         SetCardDisplay(nextCard);
         StartCoroutine(FlipCard(cardTransforms[nextCard], false));
         yield return new WaitUntil(() => cardStates[nextCard] == cardState.notMoving);
@@ -269,7 +244,11 @@ public class halliGalli : MonoBehaviour
             }
         }
         foreach (Renderer fruit in fruitSymbols.Select(f => f.GetComponent<Renderer>()))
+        {
+            if (displayedFruits[ix] == -2)
+                continue;
             fruit.material.mainTexture = fruitTextures[displayedFruits[ix]];
+        }
     }
 
     private IEnumerator FlipCard(Transform card, bool flipDown)
